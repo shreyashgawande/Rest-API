@@ -10,7 +10,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://127.0.0.1:27017/wikiDB",{useNewUrlParser : true});
+// mongoose.connect("mongodb://127.0.0.1:27017/wikiDB",{useNewUrlParser : true});
+mongoose.connect("mongodb+srv://shreyashgawande48:Shreyash8902@cluster0.hukbecs.mongodb.net/wikiDB",{useNewUrlParser : true});
 
 const articleSchema = {
   title: String,
@@ -33,10 +34,15 @@ app.route("/articles")
 })
 .post(function(req,res){
   // console.log(req.body);
+  if(!req.body.title || !req.body.content){
+    res.send("Some data is missing");
+  }
+  else{
   const article = new Article({
     title : req.body.title,
     content: req.body.content
   });
+ 
   article.save(function(err){
     if(!err){
       res.send("Successfully added a new article ");
@@ -45,7 +51,7 @@ app.route("/articles")
       res.send(err);
     }
   });
-
+  }
 })
 .delete(function(req,res){
   Article.deleteMany({},function(err){
